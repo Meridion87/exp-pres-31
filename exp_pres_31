@@ -1,0 +1,23 @@
+CREATE DATABASE call_list;
+
+CREATE TABLE users (id SERIAL PRIMARY KEY, first_name VARCHAR(50), email VARCHAR (50));
+
+INSERT INTO users (first_name, email) VALUES ('Carlos', 'carlitos@email.com');
+
+INSERT INTO users (first_name, email) VALUES ('Laura', 'laurita@email.com');
+
+CREATE TABLE calls (id SERIAL PRIMARY KEY, phone VARCHAR(20), date DATE, user_id INTEGER REFERENCES users (id));
+
+ALTER TABLE users ADD COLUMN last_name VARCHAR (50);
+
+UPDATE users SET last_name = 'Molina' where first_name = 'Carlos';
+
+UPDATE users SET last_name = 'Sanhueza' where first_name = 'Laura';
+
+INSERT INTO users (first_name, last_name, email) VALUES ('Celedonio', 'Virtudes', 'cvirtudes@email.com');
+
+SELECT users.first_name || ' ' || users.last_name AS usuario, COUNT(calls.id) FROM users LEFT JOIN calls ON users.id = calls.user_id GROUP BY usuario;
+
+SELECT calls.id, calls.phone, calls.date, users.first_name FROM calls LEFT JOIN users ON calls.user_id = users.id WHERE users.first_name = 'Carlos' ORDER BY date DESC;
+
+CREATE TABLE auditoria (id SERIAL PRIMARY KEY, user_is INTEGER REFERENCES users (id), call_id INTEGER REFERENCES calls (id), motivo_borrado VARCHAR (100));
